@@ -32,11 +32,11 @@ export class ProductsComponent implements OnInit {
     this.fetchProducts();
   }
 
+  // Fetch products on initial load
   fetchProducts(): void {
     this.apiService.getProducts().subscribe(
       (response: any) => {
         this.products = response;
-        console.log(this.products, 'products  here');
         this.dataSource = this.products; // Update dataSource after fetching products
       },
       (error) => {
@@ -45,25 +45,32 @@ export class ProductsComponent implements OnInit {
     );
   }
 
+  // edit product functionality
   editProduct(product: any): void {
     const dialogRef = this.dialog.open(EditProductModalComponent, {
       width: '600px',
       data: product,
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // Handle updated product data
-        console.log('Updated product:', result);
-        // Optionally: update this.products with the edited product
+    dialogRef.afterClosed().subscribe((updatedProduct) => {
+      if (updatedProduct) {
+        // Find the index of the edited product in the products array
+        const index = this.products.findIndex(
+          (prod) => prod.id === updatedProduct.id
+        );
+        if (index !== -1) {
+          // Replace the old product with the updated one
+          this.products[index] = updatedProduct;
+
+          // Refresh the dataSource with the updated products array
+          this.dataSource = [...this.products];
+        }
       }
     });
   }
 
+  // delete product functionality
   deleteProduct(product: any): void {
-    console.log('Deleting product', product);
-    // Implement your delete functionality here
-
     this.apiService.deleteProduct(product.id).subscribe(
       () => {
         this.products = this.products.filter((prod) => prod.id !== product.id);
