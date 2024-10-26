@@ -1,0 +1,37 @@
+.dialog-title {
+  text-align: center;
+  padding: 16px;
+}
+
+.dialog-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Spacing between form fields */
+  padding: 0 1.5rem;
+  /* border: 1px solid black; */
+}
+
+.product-image {
+  width: 5rem;
+  height: 5rem;
+  object-fit: contain; /* Ensures the image covers the area without distortion */
+  margin-bottom: 16px; /* Spacing below the image */
+}
+
+.form-field {
+  width: 100%; /* Full width of the dialog */
+}
+
+.dialog-actions {
+  justify-content: flex-end; /* Align buttons to the right */
+  padding: 16px; /* Add padding around action buttons */
+}
+
+.cancel-button {
+  margin-right: 8px; /* Space between Cancel and Save buttons */
+}
+
+.save-button {
+  /* Add any specific styles for the save button here */
+}
