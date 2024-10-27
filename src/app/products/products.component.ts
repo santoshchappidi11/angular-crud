@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-products',
@@ -71,15 +72,31 @@ export class ProductsComponent implements OnInit {
 
   // delete product functionality
   deleteProduct(product: any): void {
-    this.apiService.deleteProduct(product.id).subscribe(
-      () => {
-        this.products = this.products.filter((prod) => prod.id !== product.id);
-        this.dataSource = [...this.products];
-        console.log('product deleted successfully!');
-      },
-      (error) => {
-        console.log('Error deleting product', error);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Dou you want to delete this product?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'yes, delete it!',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.apiService.deleteProduct(product.id).subscribe(
+          () => {
+            this.products = this.products.filter(
+              (prod) => prod.id !== product.id
+            );
+            this.dataSource = [...this.products];
+            console.log('product deleted successfully!');
+            Swal.fire('Deleted!', 'The product has been deleted.', 'success');
+          },
+          (error) => {
+            console.log('Error deleting product', error);
+            Swal.fire('Error!', 'Failed to delete the product.', 'error');
+          }
+        );
       }
-    );
+    });
   }
 }
