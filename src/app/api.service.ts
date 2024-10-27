@@ -10,15 +10,17 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  // To fetch Products
+  // To fetch products
   getProducts(): Observable<any> {
     return this.http.get<any>(this.apiUrl);
   }
 
+  // To edit product by ID
   getProductById(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
+  // To delete product by ID
   deleteProduct(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }

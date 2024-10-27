@@ -1,16 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from '../api.service';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { EditProductModalComponent } from '../edit-product-modal/edit-product-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import Swal from 'sweetalert2';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-products',
   standalone: true,
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatDialogModule],
+  imports: [
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css'],
 })
@@ -25,7 +32,9 @@ export class ProductsComponent implements OnInit {
     'image',
     'actions',
   ];
-  dataSource = this.products;
+  dataSource = new MatTableDataSource<any>();
+
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
 
   constructor(private apiService: ApiService, private dialog: MatDialog) {}
 
@@ -33,12 +42,18 @@ export class ProductsComponent implements OnInit {
     this.fetchProducts();
   }
 
+  ngAfterViewInit() {
+    if (this.paginator) {
+      this.dataSource.paginator = this.paginator;
+    }
+  }
+
   // Fetch products on initial load
   fetchProducts(): void {
     this.apiService.getProducts().subscribe(
       (response: any) => {
         this.products = response;
-        this.dataSource = this.products; // Update dataSource after fetching products
+        this.dataSource.data = this.products; // Correctly set the data
       },
       (error) => {
         console.error('Error fetching products', error);
@@ -64,7 +79,9 @@ export class ProductsComponent implements OnInit {
           this.products[index] = updatedProduct;
 
           // Refresh the dataSource with the updated products array
-          this.dataSource = [...this.products];
+          this.dataSource.data = this.products;
+
+          Swal.fire('Updated!', 'The product has been updated.', 'success');
         }
       }
     });
@@ -74,7 +91,7 @@ export class ProductsComponent implements OnInit {
   deleteProduct(product: any): void {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'Dou you want to delete this product?',
+      text: 'Do you want to delete this product?',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -87,7 +104,7 @@ export class ProductsComponent implements OnInit {
             this.products = this.products.filter(
               (prod) => prod.id !== product.id
             );
-            this.dataSource = [...this.products];
+            this.dataSource.data = this.products;
             console.log('product deleted successfully!');
             Swal.fire('Deleted!', 'The product has been deleted.', 'success');
           },
