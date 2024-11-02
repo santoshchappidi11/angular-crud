@@ -1,0 +1,19 @@
+.form-crud-nav {
+  height: 50px;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 0 5px;
+  /* border: 1px solid black; */
+}
+
+.form-crud-nav button {
+  border: none;
+  background: none;
+  background-color: rgb(19, 97, 255);
+  cursor: pointer;
+  padding: 5px 15px;
+  color: white;
+  border-radius: 8px;
+}
