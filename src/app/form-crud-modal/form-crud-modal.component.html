@@ -1,46 +1,88 @@
-<h2 mat-dialog-title class="dialog-title" style="font-size: xx-large">
+<h2 mat-dialog-title class="dialog-title">
   {{ isEditMode ? "Edit User" : "Create User" }}
 </h2>
 
 <div mat-dialog-content class="dialog-content">
-  <!-- <img [src]="data.image" alt="{{ data.title }}" class="product-image" /> -->
   <form [formGroup]="userForm">
-    <mat-form-field appearance="fill" class="form-field">
-      <mat-label>firstName</mat-label>
-      <input matInput formControlName="firstName" required />
-    </mat-form-field>
+    <div>
+      <label for="firstName">First Name</label>
+      <input id="firstName" type="text" formControlName="firstName" required />
+      <div
+        *ngIf="
+          userForm.get('firstName')?.invalid &&
+          userForm.get('firstName')?.touched
+        "
+        class="error"
+      >
+        First name is required.
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="form-field">
-      <mat-label>lastName</mat-label>
-      <input matInput formControlName="lastName" required />
-    </mat-form-field>
+    <div>
+      <label for="lastName">Last Name</label>
+      <input id="lastName" type="text" formControlName="lastName" required />
+      <div
+        *ngIf="
+          userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched
+        "
+        class="error"
+      >
+        Last name is required.
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="form-field">
-      <mat-label>DOB</mat-label>
+    <div>
+      <label for="DOB">Date of Birth</label>
       <input
-        matInput
+        id="DOB"
         type="date"
         formControlName="DOB"
         required
         placeholder="Choose a date"
       />
-      <!-- <mat-datepicker #picker></mat-datepicker> -->
-    </mat-form-field>
+      <div
+        *ngIf="userForm.get('DOB')?.invalid && userForm.get('DOB')?.touched"
+        class="error"
+      >
+        DOB is required.
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="form-field">
-      <mat-label>phoneNumber</mat-label>
-      <input matInput type="number" formControlName="phoneNumber" required />
-    </mat-form-field>
+    <div>
+      <label for="phoneNumber">Phone Number</label>
+      <input
+        id="phoneNumber"
+        type="number"
+        formControlName="phoneNumber"
+        required
+      />
+      <div
+        *ngIf="
+          userForm.get('phoneNumber')?.invalid &&
+          userForm.get('phoneNumber')?.touched
+        "
+        class="error"
+      >
+        Phone Number is required.
+      </div>
+    </div>
 
-    <mat-form-field appearance="fill" class="form-field">
-      <mat-label>email</mat-label>
-      <input matInput formControlName="email" required />
-    </mat-form-field>
+    <div>
+      <label for="email">Email</label>
+      <input id="email" type="email" formControlName="email" required />
+      <div
+        *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+        class="error"
+      >
+        Email is required.
+      </div>
+    </div>
   </form>
 </div>
+
 <div mat-dialog-actions class="dialog-actions">
   <button mat-button (click)="onCancel()" class="cancel-button">Cancel</button>
   <button mat-button color="primary" (click)="onSave()" class="save-button">
-    Save
+    {{ isEditMode ? "Update" : "Save" }}
   </button>
 </div>

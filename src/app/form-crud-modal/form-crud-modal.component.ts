@@ -5,8 +5,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -19,6 +17,7 @@ import {
 } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-form-crud-modal',
@@ -30,10 +29,9 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     MatFormFieldModule,
     MatButtonModule,
+    CommonModule,
   ],
   templateUrl: './form-crud-modal.component.html',
   styleUrls: ['./form-crud-modal.component.css'],
@@ -48,19 +46,33 @@ export class FormCrudModalComponent {
     private fb: FormBuilder
   ) {
     // Check if data is provided to determine if this is edit mode
-    this.isEditMode = data ? true : false;
+    this.isEditMode = data.id ? true : false;
+
     this.userForm = this.fb.group({
       firstName: [data?.firstName || '', Validators.required],
       lastName: [data?.lastName || '', Validators.required],
       DOB: [data?.DOB || '', Validators.required],
-      phoneNumber: [data?.phoneNumber || '', Validators.required],
-      email: [data?.email || '', [Validators.required, Validators.email]],
+      phoneNumber: [
+        data?.phoneNumber || '',
+        [Validators.required, Validators.pattern(/^[0-9]{10}$/)],
+      ],
+      email: [
+        data?.email || '',
+        [
+          Validators.required,
+          Validators.email,
+          Validators.pattern(
+            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/
+          ),
+        ],
+      ],
     });
   }
 
   onSave(): void {
     if (this.userForm.valid) {
-      this.dialogRef.close(this.userForm.value);
+      const updateduser = { ...this.userForm.value, id: this.data?.id };
+      this.dialogRef.close(updateduser);
     }
   }
 
